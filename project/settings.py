@@ -1,4 +1,4 @@
-#  coding: utf-8
+# coding: utf-8
 """
 Django settings for military_shop project.
 
@@ -8,9 +8,10 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
-
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -38,8 +39,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
     # third party
+    'debug_toolbar',
     'south',
+    'easy_thumbnails',
     # local apps
     'apps.shop',
 )
@@ -51,8 +55,12 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+    'django.core.context_processors.request',
+)
 ROOT_URLCONF = 'project.urls'
 
 WSGI_APPLICATION = 'project.wsgi.application'
@@ -84,7 +92,15 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-
+THUMBNAIL_ALIASES = {
+    '': {
+        'product': {'size': (270, 270), 'crop': True},  # фото товара на главной и в каталоге
+        'detail_product': {'size': (342, 342), 'crop': 'smart'},  # фото товара на странице одного товара
+        'addition_product': {'size': (60, 60), 'crop': 'smart'},  # дополнительные фото на странице товара
+        'manufacturer': {'size': (120, 45), 'crop': True},  # логотипы стра производителей на главной странице
+        'category_banner': {'size': (960, 150), 'crop': 'smart'},  # верхний баннер на странице категории
+    },
+}
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -110,7 +126,6 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
 )
 
-
 SUIT_CONFIG = {
     # header
     'ADMIN_NAME': u'Магазин',
@@ -131,12 +146,24 @@ SUIT_CONFIG = {
     'MENU': (
         {'app': 'shop', 'label': u'Магазин'},
 
-    #     'sites',
-    #     {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
-    #     {'label': 'Settings', 'icon':'icon-cog', 'models': ('auth.user', 'auth.group')},
-    #     {'label': 'Support', 'icon':'icon-question-sign', 'url': '/support/'},
+        #     'sites',
+        #     {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
+        #     {'label': 'Settings', 'icon':'icon-cog', 'models': ('auth.user', 'auth.group')},
+        #     {'label': 'Support', 'icon':'icon-question-sign', 'url': '/support/'},
     ),
 
     # misc
     # 'LIST_PER_PAGE': 15
 }
+
+SESSION_AGE_DAYS = 90
+SESSION_COOKIE_AGE = 60 * 60 * 24 * SESSION_AGE_DAYS
+
+# seconds to keep items in the cache
+CACHE_TIMEOUT = 60 * 60
+
+
+# testing email
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
