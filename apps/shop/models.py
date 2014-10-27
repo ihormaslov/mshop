@@ -5,6 +5,7 @@ import decimal
 from django.db import models
 from django.core.urlresolvers import reverse
 from easy_thumbnails.fields import ThumbnailerImageField
+from ckeditor.fields import RichTextField
 
 
 class Category(models.Model):
@@ -76,7 +77,7 @@ class Item(models.Model):
     image = ThumbnailerImageField(upload_to='images/%Y/%m', verbose_name=u'Фото товара')
     date = models.DateTimeField(default=datetime.now, verbose_name=u'Дата добавления')
     modified = models.DateTimeField(auto_now=True)
-    item_description = models.TextField(verbose_name=u'Описание товара', blank=True, null=True)
+    item_description = RichTextField(verbose_name=u'Описание товара', blank=True, null=True)
     price = models.CharField(max_length=10, verbose_name=u'Цена', default=0)
     old_price = models.CharField(max_length=10, verbose_name=u'Старая цена', default=0)
 

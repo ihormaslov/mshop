@@ -19,7 +19,7 @@ sitemaps = {
 urlpatterns = patterns('',
                        # Examples:
                        url(r'^admin/', include(admin.site.urls)),
-                       # url(r'^ckeditor/', include('ckeditor.urls')),
+                       url(r'^ckeditor/', include('ckeditor.urls')),
                        url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
                        url(r'^$', 'apps.shop.views.index', name='index'),
                        url(r'^shop/', include('apps.shop.urls', ), name='shop'),
