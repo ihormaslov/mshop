@@ -1,177 +1,226 @@
 {% extends 'base.html' %}
 {% load thumbnail %}
+
 {% block slider %}
-    <section class="homepage-slider" id="home-slider">
-        <div class="flexslider">
-            <ul class="slides">
-                <li>
-                    <img src="{{ STATIC_URL }}themes/images/carousel/banner-1.jpg" alt=""/>
-                </li>
-                <li>
-                    <img src="{{ STATIC_URL }}themes/images/carousel/banner-2.jpg" alt=""/>
+<section id="slider"><!--slider-->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="slider-carousel" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        <li data-target="#slider-carousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#slider-carousel" data-slide-to="1"></li>
+                        <li data-target="#slider-carousel" data-slide-to="2"></li>
+                    </ol>
 
-                    <div class="intro">
-                        <h1>Mid season sale</h1>
+                    <div class="carousel-inner">
+                        <div class="item active">
+                            <div class="col-sm-6">
+                                <h1><span>E</span>-SHOPPER</h1>
+                                <h2>Free E-Commerce Template</h2>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+                                <button type="button" class="btn btn-default get">Get it now</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <img src="{{ STATIC_URL }}/images/home/girl1.jpg" class="girl img-responsive" alt="" />
+                                <img src="{{ STATIC_URL }}/images/home/pricing.png"  class="pricing" alt="" />
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="col-sm-6">
+                                <h1><span>E</span>-SHOPPER</h1>
+                                <h2>100% Responsive Design</h2>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+                                <button type="button" class="btn btn-default get">Get it now</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <img src="{{ STATIC_URL }}/images/home/girl2.jpg" class="girl img-responsive" alt="" />
+                                <img src="{{ STATIC_URL }}/images/home/pricing.png"  class="pricing" alt="" />
+                            </div>
+                        </div>
 
-                        <p><span>Up to 50% Off</span></p>
+                        <div class="item">
+                            <div class="col-sm-6">
+                                <h1><span>E</span>-SHOPPER</h1>
+                                <h2>Free Ecommerce Template</h2>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+                                <button type="button" class="btn btn-default get">Get it now</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <img src="{{ STATIC_URL }}/images/home/girl3.jpg" class="girl img-responsive" alt="" />
+                                <img src="{{ STATIC_URL }}/images/home/pricing.png" class="pricing" alt="" />
+                            </div>
+                        </div>
 
-                        <p><span>On selected items online and in stores</span></p>
                     </div>
-                </li>
-            </ul>
+
+                    <a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </div>
+
+            </div>
         </div>
-    </section>
+    </div>
+</section><!--/slider-->
 {% endblock slider %}
 
 {% block content %}
-    <section class="header_text">
-        We stand for top quality templates. Our genuine developers always optimized bootstrap commercial templates.
-        <br/>Don't miss to use our cheap abd best bootstrap templates.
-    </section>
-    <section class="main-content">
-        <div class="row">
-            <div class="span12">
-                <div class="row">
-                    <div class="span12">
-                        <h4 class="title">
-                <span class="pull-left"><span class="text"><span
-                        class="line">Акционные <strong>товары</strong></span></span></span>
-									<span class="pull-right">
-										<a class="left button" href="#myCarousel" data-slide="prev"></a><a
-                                            class="right button" href="#myCarousel" data-slide="next"></a>
-									</span>
-                        </h4>
-
-                        <div id="myCarousel" class="myCarousel carousel slide">
-                            <div class="carousel-inner">
-                                <div class="active item">
-                                    <ul class="thumbnails">
-                                        {% for it in action_items %}
-                                            <li class="span3">
-                                                <div class="product-box">
-                                                    <span class="sale_tag"></span>
-
-                                                    <p>
-                                                        <a href="{{ it.get_absolute_url }}"><img
-                                                                src="{{ it.image.product.url }}"
-                                                                alt=""/></a>
-                                                    </p>
-                                                    <a href="{{ it.get_absolute_url }}" class="title">{{ it.title }}</a><br/>
-                                                    <a href="{{ it.category.get_absolute_url }}"
-                                                       class="category">{{ it.category.title }}</a>
-
-                                                    <p class="price"><span
-                                                            class="old-price">{{ it.old_price }} грн</span> {{ it.price }}
-                                                        грн</p>
-                                                </div>
-                                            </li>
-                                            {% if forloop.counter|divisibleby:"4" and not forloop.last %}
-                                                </ul>
-                                                </div>
-                                                <div class="item">
-                                                <ul class="thumbnails">
-                                            {% endif %}
-                                        {% endfor %}
-                                        </ul>
-                                        </div>
+    {% include 'shop/inc.sidebar.html' %}
+    <div class="col-sm-9 padding-right">
+        <div class="features_items"><!--features_items-->
+            <h2 class="title text-center">Features Items</h2>
+            {% for item in items|slice:":6" %}
+            <div class="col-sm-4">
+                <div class="product-image-wrapper">
+                    <div class="single-products">
+                            <div class="productinfo text-center">
+                                <a href="{{ item.get_absolute_url }}"><img src="{% thumbnail item.images_set.all.0.image 268x248 crop %}" alt="" /></a>
+                                <h2>{{ item.price_currency }} грн</h2>
+                                <p><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></p>
+                                <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
                             </div>
-                        </div>
                     </div>
-                </div>
-                <br/>
-
-                <div class="row">
-                    <div class="span12">
-                        <h4 class="title">
-                <span class="pull-left"><span class="text"><span
-                        class="line">последние <strong>товары</strong></span></span></span>
-									<span class="pull-right">
-										<a class="left button" href="#myCarousel-2" data-slide="prev"></a><a
-                                            class="right button" href="#myCarousel-2" data-slide="next"></a>
-									</span>
-                        </h4>
-
-                        <div id="myCarousel-2" class="myCarousel carousel slide">
-                            <div class="carousel-inner">
-                                <div class="active item">
-                                    <ul class="thumbnails">
-                                        {% for it in items %}
-                                            <li class="span3">
-                                                <div class="product-box">
-                                                    <span class="sale_tag"></span>
-
-                                                    <p>
-                                                        <a href="{{ it.get_absolute_url }}"><img
-                                                                src="{{ it.image.product.url }}"
-                                                                alt=""/></a>
-                                                    </p>
-                                                    <a href="{{ it.get_absolute_url }}" class="title">{{ it.title }}</a><br/>
-                                                    <a href="{{ it.category.get_absolute_url }}"
-                                                       class="category">{{ it.category.title }}</a>
-
-                                                    <p class="price">{{ it.price }} грн</p>
-                                                </div>
-                                            </li>
-                                            {% if forloop.counter|divisibleby:"4" and not forloop.last %}
-                                                </ul>
-                                                </div>
-                                                <div class="item">
-                                                <ul class="thumbnails">
-                                            {% endif %}
-                                        {% endfor %}
-                                        </ul>
-                                        </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row feature_box">
-                    <div class="span4">
-                        <div class="service">
-                            <div class="responsive">
-                                <img src="{{ STATIC_URL }}themes/images/feature_img_2.png" alt=""/>
-                                <h4>MODERN <strong>DESIGN</strong></h4>
-
-                                <p>Lorem Ipsum is simply dummy text of the printing and printing industry unknown
-                                    printer.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="span4">
-                        <div class="service">
-                            <div class="customize">
-                                <img src="{{ STATIC_URL }}themes/images/feature_img_1.png" alt=""/>
-                                <h4>FREE <strong>SHIPPING</strong></h4>
-
-                                <p>Lorem Ipsum is simply dummy text of the printing and printing industry unknown
-                                    printer.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="span4">
-                        <div class="service">
-                            <div class="support">
-                                <img src="{{ STATIC_URL }}themes/images/feature_img_3.png" alt=""/>
-                                <h4>24/7 LIVE <strong>SUPPORT</strong></h4>
-
-                                <p>Lorem Ipsum is simply dummy text of the printing and printing industry unknown
-                                    printer.</p>
-                            </div>
-                        </div>
+                    <div class="choose">
+                        <ul class="nav nav-pills nav-justified">
+                            <li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+                            <li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <section class="our_client">
-        <h4 class="title"><span class="text">Производители</span></h4>
-
-        <div class="row">
-            {% for manuf in manufactures %}
-                <div class="span2">
-                    <a href="{{ manuf.get_absolute_url }}"><img alt="" src="{{ manuf.logo.manufacturer.url }}"></a>
-                </div>
             {% endfor %}
-        </div>
-    </section>
+        </div><!--features_items-->
+
+        <div class="category-tab"><!--category-tab-->
+            <div class="col-sm-12">
+                <ul class="nav nav-tabs">
+                    {% for category in categories %}
+                    <li class="{% if forloop.counter == 1 %}active{% endif %}"><a href="#{{ category.slug }}" data-toggle="tab">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="tab-content">
+                {% for category in categories %}
+                    <div class="tab-pane fade {% if forloop.counter == 1 %}active in{% endif %}" id="{{ category.slug }}" >
+                        {% for item in category.item_set.all|slice:":4" %}
+                            <div class="col-sm-3">
+                                <div class="product-image-wrapper">
+                                    <div class="single-products">
+                                        <div class="productinfo text-center">
+                                            <img src="{% thumbnail item.images_set.all.0.image 208x183 crop %}" alt="" />
+                                            <h2>{{ item.price }} грн</h2>
+                                            <p>Easy Polo Black Edition</p>
+                                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div><!--/category-tab-->
+
+        <div class="recommended_items"><!--recommended_items-->
+            <h2 class="title text-center">recommended items</h2>
+
+            <div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <div class="col-sm-4">
+                            <div class="product-image-wrapper">
+                                <div class="single-products">
+                                    <div class="productinfo text-center">
+                                        <img src="{{ STATIC_URL }}/images/home/recommend1.jpg" alt="" />
+                                        <h2>$56</h2>
+                                        <p>Easy Polo Black Edition</p>
+                                        <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="product-image-wrapper">
+                                <div class="single-products">
+                                    <div class="productinfo text-center">
+                                        <img src="{{ STATIC_URL }}/images/home/recommend2.jpg" alt="" />
+                                        <h2>$56</h2>
+                                        <p>Easy Polo Black Edition</p>
+                                        <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="product-image-wrapper">
+                                <div class="single-products">
+                                    <div class="productinfo text-center">
+                                        <img src="{{ STATIC_URL }}/images/home/recommend3.jpg" alt="" />
+                                        <h2>$56</h2>
+                                        <p>Easy Polo Black Edition</p>
+                                        <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="col-sm-4">
+                            <div class="product-image-wrapper">
+                                <div class="single-products">
+                                    <div class="productinfo text-center">
+                                        <img src="{{ STATIC_URL }}/images/home/recommend1.jpg" alt="" />
+                                        <h2>$56</h2>
+                                        <p>Easy Polo Black Edition</p>
+                                        <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="product-image-wrapper">
+                                <div class="single-products">
+                                    <div class="productinfo text-center">
+                                        <img src="{{ STATIC_URL }}/images/home/recommend2.jpg" alt="" />
+                                        <h2>$56</h2>
+                                        <p>Easy Polo Black Edition</p>
+                                        <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="product-image-wrapper">
+                                <div class="single-products">
+                                    <div class="productinfo text-center">
+                                        <img src="{{ STATIC_URL }}/images/home/recommend3.jpg" alt="" />
+                                        <h2>$56</h2>
+                                        <p>Easy Polo Black Edition</p>
+                                        <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+                    <i class="fa fa-angle-left"></i>
+                  </a>
+                  <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+                    <i class="fa fa-angle-right"></i>
+                  </a>
+            </div>
+        </div><!--/recommended_items-->
+    </div>
 {% endblock content %}

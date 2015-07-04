@@ -5,15 +5,15 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-from apps.shop.sitemap import *
+# from shop.sitemap import *
 
 
 admin.autodiscover()
 
 sitemaps = {
-    'shop_items': SitemapItems,
-    'shop_categories': SitemapCategories,
-    'shop_manufacturers': SitemapManufacturer
+#    'shop_items': SitemapItems,
+#    'shop_categories': SitemapCategories,
+#    'shop_manufacturer': SitemapManufacturer
 }
 
 urlpatterns = patterns('',
@@ -21,8 +21,8 @@ urlpatterns = patterns('',
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^ckeditor/', include('ckeditor.urls')),
                        url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
-                       url(r'^$', 'apps.shop.views.index', name='index'),
-                       url(r'^shop/', include('apps.shop.urls', ), name='shop'),
+                       url(r'^$', 'shop.views.index', name='index'),
+                       url(r'^shop/', include('shop.urls', ), name='shop'),
 )
 
 if settings.DEBUG:

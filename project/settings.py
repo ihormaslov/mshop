@@ -1,22 +1,10 @@
 # coding: utf-8
-"""
-Django settings for military_shop project.
 
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.6/ref/settings/
-"""
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '_k+4b*!feqn3o_#4*9=*1y=&w!r=aacr-tn7v8^i@+8f%odj=e'
@@ -28,6 +16,9 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+MANAGERS = (
+    (u'me', 'maslov.ihor@gmail.com')
+)
 
 # Application definition
 
@@ -42,11 +33,10 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     # third party
     'debug_toolbar',
-    'south',
     'easy_thumbnails',
     'ckeditor',
     # local apps
-    'apps.shop',
+     'shop',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -57,6 +47,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'shop.middleware.LocaleMiddleware'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (
@@ -179,3 +170,6 @@ CACHE_TIMEOUT = 60 * 60
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+CURRENCY_USD = 22
