@@ -78,7 +78,7 @@
                 <div class="product-image-wrapper">
                     <div class="single-products">
                             <div class="productinfo text-center">
-                                <a href="{{ item.get_absolute_url }}"><img src="{% thumbnail item.images_set.all.0.image 268x248 crop %}" alt="" /></a>
+                                <a href="{{ item.get_absolute_url }}"><img src="{% thumbnail item.images.all.0.image 268x248 crop %}" alt="" /></a>
                                 <h2>{{ item.price_currency }} грн</h2>
                                 <p><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></p>
                                 <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -111,7 +111,7 @@
                                 <div class="product-image-wrapper">
                                     <div class="single-products">
                                         <div class="productinfo text-center">
-                                            <img src="{% thumbnail item.images_set.all.0.image 208x183 crop %}" alt="" />
+                                            <img src="{% thumbnail item.images.all.0.image 208x183 crop %}" alt="" />
                                             <h2>{{ item.price }} грн</h2>
                                             <p>Easy Polo Black Edition</p>
                                             <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>

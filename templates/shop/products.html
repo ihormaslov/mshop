@@ -20,13 +20,14 @@
     {{ category.name }}
 {% endblock %}
 
-<section id="advertisement">
-    <div class="container">
-        <img src="images/shop/advertisement.jpg" alt="" />
-    </div>
-</section>
+
 
 {% block content %}
+    <section id="advertisement">
+        <div class="container">
+            <img src="images/shop/advertisement.jpg" alt="" />
+        </div>
+    </section>
     {% include 'shop/inc.sidebar.html' %}
     <div class="col-sm-9 padding-right">
         <div class="features_items"><!--features_items-->
@@ -36,7 +37,7 @@
                 <div class="product-image-wrapper">
                     <div class="single-products">
                         <div class="productinfo text-center">
-                            <img src="{% thumbnail item.images_set.all.0.image 268x248 crop %}" alt="" />
+                            <img src="{% thumbnail item.images.all.0.image 268x248 crop %}" alt="" />
                             <h2>{{ item.price_currency }} грн</h2>
                             <p>{{ item.name }}</p>
                             <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
