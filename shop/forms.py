@@ -37,13 +37,11 @@ class DivErrorList(ErrorList):
 
 
 class SearchForm(forms.Form):
-    search = forms.CharField(max_length=150,
-                             label='',
-                             required=False,
+    search = forms.CharField(max_length=150, label='', required=False,
                              widget=forms.TextInput(attrs={'placeholder': 'Поиск',
                                                            'class': 'input-block-level search-query'}))
 
-
+'''
 class PropertiesFilter(forms.Form):
     """
     Форма фильтрации товаров по их свойствам.
@@ -82,9 +80,17 @@ class PropertiesFilter(forms.Form):
             if len(value):
                 cleaned_data[key] = value
         return cleaned_data
-
+'''
 
 class Checkout(forms.ModelForm):
     class Meta:
         model = Order
-        exclude = ('status', 'ip_address',)
+        exclude = ('status', 'date')
+
+    def __init__(self, *args, **kwargs):
+        super(Checkout, self).__init__(*args, **kwargs)
+
+        for field in self.fields:
+            field = self.fields.get(field)
+            if field:
+                field.widget.attrs.update({'placeholder': field.label})

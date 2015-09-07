@@ -1,17 +1,20 @@
 # coding: utf-8
+
+import decimal
 import random
 from datetime import datetime, timedelta
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.mail import send_mail, mail_managers
 from django.core import urlresolvers
+from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.db.models import Q, Max
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 
 # local
-from shop.models import Category, Item, ItemProperties, Images, Manufacturer, CartItem
+from shop.models import Category, Item, ItemProperties, Images, Manufacturer, CartItem, HomeSlider
 from shop.forms import ProductAddToCartForm, DivErrorList, Checkout
 from decorators import render_to
 from shop import cart
@@ -19,42 +22,61 @@ from shop import cart
 
 @render_to('shop/index.html')
 def index(request):
-    items = Item.objects.filter(publicated=True).order_by('date')
+    items = Item.objects.filter(publicated=True).order_by('-date')[:6]
+    sliders = HomeSlider.objects.all()
+
     # sidebar
     categories = Category.objects.all()
     manufacturers = Manufacturer.objects.all()
 
-    cart_item_count = cart.cart_distinct_item_count(request)
+    cart_item_count = CartItem.objects.filter(cart_id=_cart_id(request)).count()
 
-    return {'items': items, 'categories': categories, 'manufacturers': manufacturers, 'cart_item_count': cart_item_count}
+    return {'items': items, 'categories': categories, 'manufacturers': manufacturers, 'cart_item_count': cart_item_count,
+            'sliders': sliders}
 
 
 @render_to('shop/products.html')
 def category_page(request, slug=None):
     category = get_object_or_404(Category, slug=slug)
-    items = Item.objects.filter(publicated=True, category=category.pk)
+    items = Item.objects.filter(publicated=True, category=category.pk).order_by('-date')
 
     # sidebar
     categories = Category.objects.all()
     manufacturers = Manufacturer.objects.all()
 
-    order_by = '-date'
     if 'order' in request.GET:
         order = request.GET.get('order')
         if order == 'low':
-            order_by = 'price'
+            items.order_by('price')
         if order == 'high':
-            order_by = '-price'
+            items.order_by('-price')
 
     # pagination
-    items = pagination(request, items.order_by(order_by))
+    items = pagination(request, items)
 
     return {'items': items, 'category': category, 'categories': categories, 'manufacturers': manufacturers}
 
 
+@render_to('shop/products.html')
 def manufacturer_page(request, slug=None):
-    """docstring for manufacturer_page"""
-    pass
+    manufacturer = get_object_or_404(Manufacturer, slug=slug)
+    items = Item.objects.filter(publicated=True, manufacturer=manufacturer.pk).order_by('-date')
+
+    # sidebar
+    categories = Category.objects.all()
+    manufacturers = Manufacturer.objects.all()
+
+    if 'order' in request.GET:
+        order = request.GET.get('order')
+        if order == 'low':
+            items.order_by('price')
+        if order == 'high':
+            items.order_by('-price')
+
+    # pagination
+    items = pagination(request, items)
+
+    return {'items': items, 'category': manufacturer, 'categories': categories, 'manufacturers': manufacturers}
 
 
 @render_to('shop/product-details.html')
@@ -66,6 +88,7 @@ def item(request, self_slug, category_slug):
     form = ProductAddToCartForm(request=request, label_suffix=':')
     success = ''
     if request.method == 'POST':
+        # TODO refactoring
         postdata = request.POST.copy()
         form = ProductAddToCartForm(request, postdata, error_class=DivErrorList)
         if form.is_valid():
@@ -79,7 +102,7 @@ def item(request, self_slug, category_slug):
 
     form.fields['product_slug'].widget.attrs['value'] = self_slug
     request.session.set_test_cookie()
-    cart_item_count = cart.cart_distinct_item_count(request)
+    cart_item_count = CartItem.objects.filter(cart_id=_cart_id(request)).count()
 
     # sidebar
     categories = Category.objects.all()
@@ -91,27 +114,27 @@ def item(request, self_slug, category_slug):
 
 @render_to('shop/cart.html')
 def show_cart(request):
-    if request.method == 'POST':
-        postdata = request.POST.copy()
-        if postdata['submit'] == 'Remove':
-            cart.remove_from_cart(request)
-        if postdata['submit'] == 'Update':
-            cart.update_cart(request)
-        if postdata['submit'] == 'Checkout':
-            return HttpResponseRedirect(urlresolvers.reverse('checkout'))
+    cart_item_count = CartItem.objects.filter(cart_id=_cart_id(request)).count()
+    cart_items = CartItem.objects.filter(cart_id=_cart_id(request))
 
-    cart_item_count = cart.cart_distinct_item_count(request)
-    cart_items = cart.get_cart_items(request)
-    cart_subtotal = cart.cart_subtotal(request)
+    cart_subtotal = decimal.Decimal('0.00')
+    if cart_items:
+        for item in cart_items:
+            cart_subtotal += int(item.product.price) * int(item.quantity)
 
     return {'cart_items': cart_items,
             'cart_subtotal': cart_subtotal,
             'cart_item_count': cart_item_count}
 
 
-def add_to_cart(request):
-    """docstring for add_to_cart"""
-    pass
+def add_to_cart(request, item_id):
+    try:
+        cart_item = CartItem.objects.get(product__id=item_id, cart_id=_cart_id(request))
+        cart_item.augment_quantity(1)
+    except ObjectDoesNotExist:
+        item = Item.objects.get(id=item_id)
+        CartItem.objects.create(product = item, cart_id=_cart_id(request))
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 def remove_from_cart(request, item_id):
@@ -132,20 +155,16 @@ def _cart_id(request):
 
 
 @render_to('shop/checkout.html')
-def show_checkout(request):
-    message = False
-    # cart_item_count = ''
-
+def checkout(request):
     if cart.is_empty(request):
         cart_url = urlresolvers.reverse('cart')
         return HttpResponseRedirect(cart_url)
 
+    form = Checkout()
     if request.method == 'POST':
-        postdata = request.POST.copy()
-        form = Checkout(postdata, error_class=DivErrorList)
+        form = Checkout(request.POST)
         if form.is_valid():
             checkout_form = form.save(commit=False)
-            checkout_form.ip_address = request.META.get('REMOTE_ADDR')
             checkout_form.save()
             # отправка почты менеджеру
             manager_message = ''
@@ -161,15 +180,11 @@ def show_checkout(request):
             if email:
                 send_mail(user_message_title, user_message, u'Military shop', [email])
 
-            cart.empty_cart(request)
-            message = True
-    else:
-        form = Checkout()
-    cart_item_count = cart.cart_distinct_item_count(request)
-    print cart_item_count
-    return {'message': message,
-            'form': form,
-            'cart_item_count': cart_item_count}
+            CartItem.objects.filter(cart_id=_cart_id(request)).delete()
+
+    cart_item_count = CartItem.objects.filter(cart_id=_cart_id(request)).count()
+    cart_items = CartItem.objects.filter(cart_id=_cart_id(request))
+    return {'cart_items': cart_items, 'form': form, 'cart_item_count': cart_item_count}
 
 
 @render_to('shop/search.html')

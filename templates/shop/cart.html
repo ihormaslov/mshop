@@ -37,9 +37,9 @@
                             </td>
                             <td class="cart_quantity">
                                 <div class="cart_quantity_button">
-                                    <a class="cart_quantity_up" href="#"> + </a>
+                                    {# <a class="cart_quantity_up" href="#"> + </a> #}
                                     <input class="cart_quantity_input" type="text" name="quantity" value="{{ item.quantity }}" autocomplete="off" size="2">
-                                    <a class="cart_quantity_down" href="#"> - </a>
+                                    {# <a class="cart_quantity_down" href="#"> - </a> #}
                                 </div>
                             </td>
                             <td class="cart_total">
@@ -58,21 +58,22 @@
 
 <section id="do_action">
     <div class="container">
-        <div class="heading">
+
+        <div class="row">
+        <div class="heading col-xs-12 col-sm-4 pull-right">
             <h3>Готовы оформить заказ?</h3>
             <p>Choose if you have a discount code or reward points you want to use or would like to estimate your delivery cost.</p>
         </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="total_area">
-                    <ul>
-                        <li>Общая стоимость <span>$59</span></li>
-                    </ul>
-                        <a class="btn btn-default update" href="">Пересчитать</a>
-                        <a class="btn btn-default check_out" href="">Оформить заказ</a>
-                        <a class="btn btn-default check_out" href="">Продолжить покупки</a>
-                </div>
+        <div class="clearfix"></div>
+        <div class="col-xs-12 col-sm-4 pull-right">
+            <div class="total_area">
+                <ul>
+                    <li>Общая стоимость <span>$59</span></li>
+                </ul>
+                    <a class="btn btn-default update" href="">Пересчитать</a>
+                    <a class="btn btn-default check_out" href="{% url 'checkout' %}">Оформить заказ</a>
             </div>
+        </div>
         </div>
     </div>
 </section><!--/#do_action-->

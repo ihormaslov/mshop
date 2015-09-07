@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.db import models
 from django.forms import CheckboxInput
 
-from shop.models import Category, Item, ItemProperties, Properties, Images, Order, OrderItem, Manufacturer
+from shop.models import Category, Item, ItemProperties, Properties, Images, Order, OrderItem, Manufacturer, HomeSlider
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -84,8 +84,14 @@ class OrderAdmin(admin.ModelAdmin):
         (u'Комментарий к заказу', {'fields': ('comment',)}),
     )
 
+
+class HomeSliderAdmin(admin.ModelAdmin):
+    list_display = ('name', 'link',)
+    fields = ('name', 'image', 'link', 'text',)
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Properties, PropertiesAdmin)
 admin.site.register(Order, OrderAdmin)
+admin.site.register(HomeSlider, HomeSliderAdmin)

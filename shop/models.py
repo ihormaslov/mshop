@@ -59,8 +59,8 @@ class Manufacturer(models.Model):
 
 
 class Item(models.Model):
-    category = models.ForeignKey(Category, verbose_name=u'Категория')
-    manufacturer = models.ForeignKey(Manufacturer, verbose_name=u'Производитель')
+    category = models.ForeignKey(Category, verbose_name=u'Категория', related_name='items')
+    manufacturer = models.ForeignKey(Manufacturer, verbose_name=u'Производитель', related_name='items')
 
     name = models.CharField(max_length=255, verbose_name=u'Название товара')
     order = models.IntegerField(verbose_name=u'Порядок сортировки', blank=True, null=True, default=0)
@@ -68,7 +68,7 @@ class Item(models.Model):
     inStore = models.BooleanField(verbose_name=u'В наличии', default=True)
     item_description = RichTextField(verbose_name=u'Описание товара', blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name=u'Цена')
-
+    #TODO add property " new or all item "
     date = models.DateTimeField(default=datetime.now, verbose_name=u'Дата добавления')
     modified = models.DateTimeField(auto_now=True)
 
@@ -95,6 +95,12 @@ class Item(models.Model):
         p = self.price * CURRENCY_USD
         return p
 
+    def is_new(self):
+        """
+        Calculate delta from time when item was added and now.
+        """
+        pass
+
 
 class Images(models.Model):
     item = models.ForeignKey(Item, related_name='images')
@@ -109,9 +115,10 @@ class Properties(models.Model):
     """
     Свойства товаров
     """
+    #TODO remove m2m
     propName = models.CharField(max_length=100, verbose_name=u'Свойство', blank=True)
     order = models.IntegerField(verbose_name=u'Порядок сортировки', blank=True, null=True, default=0)
-    category = models.ManyToManyField(Category, verbose_name=u'Привязка к категории', blank=True, null=True)
+    category = models.ForeignKey(Category, verbose_name=u'Привязка к категории', blank=True, null=True)
 
     def __unicode__(self):
         return self.propName
@@ -171,64 +178,34 @@ class CartItem(models.Model):
         self.save()
 
 
-class BaseOrderInfo(models.Model):
-    """
-    Базовая модель заказа, которая будет наследоваться другими моделями
-    """
-
-    class Meta:
-        abstract = True
-
+class Order(models.Model):
     SHIP_METHOD = (
         (1, 'Новая почта'),
         (2, 'Автолюкс'),
         (3, 'Гюнсел'),
         (4, 'Міст Експрес'),
     )
-
-    # contat info
-    first_name = models.CharField(max_length=50, verbose_name=u'Имя')
-    phone = models.CharField(max_length=20, verbose_name=u'Телефон')
-    email = models.EmailField(max_length=50, verbose_name=u'E-mail', blank=True, null=True)
-    # last_name = models.CharField(max_length=50, verbose_name=u'Фамилия', blank=True, null=True)
-    call_time = models.CharField(max_length=50, verbose_name=u'Удобное время для звонка', blank=True, null=True)
-
-    # shiping method
-    ship_method = models.IntegerField(choices=SHIP_METHOD, verbose_name=u'Способ доставки')
-
-    # shiping address
-    # flat = models.CharField(max_length=100, verbose_name=u'Квартира', blank=True, null=True)
-    # building = models.CharField(max_length=100, verbose_name=u'Дом', blank=True, null=True)
-    # street = models.CharField(max_length=100, verbose_name=u'Улица', blank=True, null=True)
-    # city = models.CharField(max_length=100, verbose_name=u'Город')
-    # region = models.CharField(max_length=100, verbose_name=u'Область')
-    # office = models.CharField(max_length=100, verbose_name=u'Номер склада (адрес офиса)', blank=True, null=True)
-    # additional_info = models.CharField(max_length=100, verbose_name=u'№ подъезда, код на двери, этаж...', blank=True,
-    #                                    null=True)
-
-    # order comment
-    comment = models.TextField(max_length=3000, verbose_name=u'Комментарий к заказу', blank=True, null=True)
-
-
-class Order(BaseOrderInfo):
-    # order status
     SUBMITTED = 1
     PROCESSED = 2
     SHIPED = 3
     CANCELLED = 4
-    # set order status
     ORDER_STATUS = (
         (SUBMITTED, 'Принято'),
         (PROCESSED, 'Обработанно'),
         (SHIPED, 'Доставлено'),
         (CANCELLED, 'Отменено'),
     )
-    # order info
+
+    first_name = models.CharField(max_length=50, verbose_name=u'Имя')
+    last_name = models.CharField(max_length=50, verbose_name=u'Фамилия')
+    phone = models.CharField(max_length=20, verbose_name=u'Телефон')
+    email = models.EmailField(max_length=50, verbose_name=u'E-mail', blank=True, null=True)
+
+    ship_method = models.IntegerField(choices=SHIP_METHOD, default=1, verbose_name=u'Способ доставки')
+    comment = models.TextField(max_length=3000, verbose_name=u'Комментарий к заказу', blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True, verbose_name=u'Дата')
     status = models.IntegerField(choices=ORDER_STATUS, default=SUBMITTED, verbose_name=u'Статус заказа')
-    ip_address = models.IPAddressField(blank=True, null=True, verbose_name=u'ip-адрес заказчика')
     last_updated = models.DateTimeField(auto_now=True, verbose_name=u'Последнее обновление')
-    # user = models.ForeignKey(User, null=True) # возможно добавится в будущем
 
     def __unicode__(self):
         return u'Заказ № %s' % str(self.id)
@@ -271,3 +248,15 @@ class OrderItem(models.Model):
     class Meta:
         verbose_name = u'Товар'
         verbose_name_plural = u'Товары'
+
+
+class HomeSlider(models.Model):
+    name = models.CharField(max_length=255, verbose_name=u'Название слайда')
+    image = models.ImageField(upload_to='images/%Y/%m', verbose_name=u'Картинка слайдера')
+    link = models.URLField(max_length=200, verbose_name=u'Ссылка')
+    text = RichTextField(max_length=500, verbose_name=u'Текст слайда')
+
+
+    class Meta:
+        verbose_name = u'Слайдер на главной'
+        verbose_name_plural = u'Слайдеры на главной'

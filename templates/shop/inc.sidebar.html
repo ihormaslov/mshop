@@ -24,15 +24,40 @@
                 </div>
             </div> -->
             {% for category in categories %}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a href="{{ category.get_absolute_url }}">
-                            <span class="pull-right">({{ category.item_set.all.count }})</span>{{ category.name }}
-                        </a>
-                    </h4>
-                </div>
-            </div>
+                {% if not category.parent %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                {% if category.children.count == 0 %}
+                                    <a href="{{ category.get_absolute_url }}">
+                                        <span class="pull-right">({{ category.items.all.count }})</span>{{ category.name }}
+                                    </a>
+                                {% else %}
+                                    <a data-toggle="collapse" data-parent="#accordian" href="#{{ category.id }}">
+                                        <span class="badge pull-right"><i class="fa fa-plus"></i></span>
+                                        {{ category.name  }}
+                                    </a>
+                                {% endif %}
+                            </h4>
+                        </div>
+                        {% if category.children.count != 0 %}
+                        <div id="{{ category.id }}" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <ul>
+                                        {% for category1 in category.children.all %}
+                                            <li>
+                                                <a href="{{ category1.get_absolute_url }}">
+                                                    <span class="pull-right">({{ category1.items.all.count }})</span>{{ category1.name }}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
             {% endfor %}
         </div><!--/category-products-->
 
@@ -41,14 +66,17 @@
             <div class="brands-name">
                 <ul class="nav nav-pills nav-stacked">
                     {% for manuf in manufacturers %}
-                        {% if manuf.item_set.all.count %}
-                            <li><a href="#"><span class="pull-right">({{ manuf.item_set.all.count }})</span>{{ manuf.name }}</a></li>
+                        {% if manuf.items.all.count %}
+                            <li>
+                                <a href="{{ manuf.get_absolute_url }}"><span class="pull-right">({{ manuf.items.all.count }})</span>{{ manuf.name }}</a>
+                            </li>
                         {% endif %}
                     {% endfor %}
                 </ul>
             </div>
         </div><!--/brands_products-->
 
+        {% comment %}
         <div class="price-range"><!--price-range-->
             <h2>Price Range</h2>
             <div class="well text-center">
@@ -57,10 +85,10 @@
             </div>
         </div><!--/price-range-->
 
-        <div class="shipping text-center"><!--shipping-->
-            <img src="{{ STATIC_URL }}images/home/shipping.jpg" alt="" />
-        </div><!--/shipping-->
-
+           <div class="shipping text-center"><!--shipping-->
+               <img src="{{ STATIC_URL }}images/home/shipping.jpg" alt="" />
+           </div><!--/shipping-->
+        {% endcomment %}
     </div>
 </div>
 
