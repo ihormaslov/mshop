@@ -1,9 +1,7 @@
 # coding: UTF-8
-from itertools import chain
 from django import forms
-from django.forms.utils import ErrorList
 # locals
-from shop.models import Properties, ItemProperties, Order
+from shop.models import Order
 
 
 class ProductAddToCartForm(forms.Form):
@@ -12,28 +10,15 @@ class ProductAddToCartForm(forms.Form):
                                   error_messages={'invalid': u'Введите правильное количество.'}, min_value=1)
     product_slug = forms.CharField(widget=forms.HiddenInput())
 
-    # override the default __init__ so we can set the request
     def __init__(self, request=None, *args, **kwargs):
         self.request = request
         super(ProductAddToCartForm, self).__init__(*args, **kwargs)
 
-    # custom validation to check for cookies
     def clean(self):
         if self.request:
             if not self.request.session.test_cookie_worked():
                 raise forms.ValidationError("Cookies должны быть включены.")
         return self.cleaned_data
-
-
-class DivErrorList(ErrorList):
-    def __unicode__(self):
-        return self.as_divs()
-
-    def as_divs(self):
-        if not self:
-            return u''
-        return u'<div class="alert alert-warning" role="alert">%s</div>' % '' \
-            .join([u'<div class="error">%s</div>' % e for e in self])
 
 
 class SearchForm(forms.Form):

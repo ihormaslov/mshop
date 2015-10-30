@@ -11,7 +11,7 @@ urlpatterns = patterns('',
 
                        url(r'^cart/$', views.show_cart, name='cart'),
                        url(r'^cart/remove/(?P<item_id>\d+)', views.remove_from_cart, name='remove_from_cart'),
-                       url(r'^cart/add/(?P<item_id>\d+)', views.add_to_cart, name='add_to_cart'),
+                       url(r'^cart/add/(?P<item_slug>\w+)', views.add_to_cart, name='add_to_cart'),
                        url(r'^checkout/$', views.checkout, name='checkout'),
 
                        url(r'^search/$', views.show_search, name='show_search')

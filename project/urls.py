@@ -1,4 +1,4 @@
-# coding: utf-8
+# coding: utf-8
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
 from django.conf.urls.static import static
@@ -19,7 +19,7 @@ sitemaps = {
 urlpatterns = patterns('',
                        # Examples:
                        url(r'^admin/', include(admin.site.urls)),
-                       url(r'^ckeditor/', include('ckeditor.urls')),
+                       url(r'^ckeditor/', include('ckeditor_uploader.urls')),
                        url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
                        url(r'^$', 'shop.views.index', name='index'),
                        url(r'^shop/', include('shop.urls', ), name='shop'),

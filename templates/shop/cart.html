@@ -33,7 +33,7 @@
                                 <p>Web ID: {{ item.product.id }}</p>
                             </td>
                             <td class="cart_price">
-                                <p>{{ item.product.price }} грн</p>
+                                <p>{{ item.product.price_currency }} грн</p>
                             </td>
                             <td class="cart_quantity">
                                 <div class="cart_quantity_button">
@@ -43,7 +43,7 @@
                                 </div>
                             </td>
                             <td class="cart_total">
-                                <p class="cart_total_price">$59</p>
+                                <p class="cart_total_price">{{ item.total }} грн</p>
                             </td>
                             <td class="cart_delete">
                                 <a class="cart_quantity_delete" href="{% url 'remove_from_cart' item.id %}"><i class="fa fa-times"></i></a>
@@ -68,7 +68,7 @@
         <div class="col-xs-12 col-sm-4 pull-right">
             <div class="total_area">
                 <ul>
-                    <li>Общая стоимость <span>$59</span></li>
+                    <li>Общая стоимость <span>{{ cart_items.0.cart_total }} грн</span></li>
                 </ul>
                     <a class="btn btn-default update" href="">Пересчитать</a>
                     <a class="btn btn-default check_out" href="{% url 'checkout' %}">Оформить заказ</a>

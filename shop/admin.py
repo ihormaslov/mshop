@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.db import models
 from django.forms import CheckboxInput
 
-from shop.models import Category, Item, ItemProperties, Properties, Images, Order, OrderItem, Manufacturer, HomeSlider
+from shop.models import Category, Item, ItemProperties, Properties, Images, Order, OrderedItems, Manufacturer, HomeSlider
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -47,7 +47,7 @@ class ItemAdmin(admin.ModelAdmin):
         models.BooleanField: {'widget': CheckboxInput}
     }
     list_display = ('name', 'category', 'price', 'date', )
-    search_fields = ['title', 'item_description']
+    search_fields = ['name', 'item_description']
     prepopulated_fields = {'slug': ('name', )}
 
     inlines = [ImagesInlines, ItemPropertiesInlines]
@@ -68,8 +68,9 @@ class PropertiesAdmin(admin.ModelAdmin):
 
 
 class OrderItemInline(admin.StackedInline):
-    model = OrderItem
+    model = OrderedItems
     extra = 0
+    readonly_fields = ('product', 'quantity', 'price')
 
 
 class OrderAdmin(admin.ModelAdmin):
@@ -78,9 +79,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
 
     fieldsets = (
-        (u'Основное', {'fields': ('status', 'email', 'phone', 'first_name', 'last_name',)}),
-        (u'Доставка',
-         {'fields': ('ship_method', 'office', 'region', 'city', 'street', 'building', 'flat', 'additional_info',)}),
+        (u'Основное', {'fields': ('status', 'email', 'phone', 'first_name', 'last_name', 'ship_method',)}),
         (u'Комментарий к заказу', {'fields': ('comment',)}),
     )
 

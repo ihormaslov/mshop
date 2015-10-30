@@ -39,7 +39,7 @@
                             <img src="{% thumbnail item.images.all.0.image 268x248 crop %}" alt="" />
                             <h2>{{ item.price_currency }} грн</h2>
                             <p>{{ item.name }}</p>
-                            <a href="{% url 'add_to_cart' item.id %}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>В корзину</a>
+                            <a href="{% url 'add_to_cart' item.slug %}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>В корзину</a>
                         </div>
                     </div>
                 </div>

@@ -18,6 +18,7 @@
 			<div class="shopper-informations">
 				<div class="row">
 					<form method="post" action=".">
+                        {{ form.non_field_errors }}
                         {% csrf_token %}
                         <div class="col-sm-4">
                             <div class="shopper-info">
