@@ -30,7 +30,7 @@
                             <h4 class="panel-title">
                                 {% if category.children.count == 0 %}
                                     <a href="{{ category.get_absolute_url }}">
-                                        <span class="pull-right">({{ category.items.all.count }})</span>{{ category.name }}
+                                        <span class="pull-right">({{ category.c_items.all.count }})</span>{{ category.name }}
                                     </a>
                                 {% else %}
                                     <a data-toggle="collapse" data-parent="#accordian" href="#{{ category.id }}">
@@ -47,7 +47,7 @@
                                         {% for category1 in category.children.all %}
                                             <li>
                                                 <a href="{{ category1.get_absolute_url }}">
-                                                    <span class="pull-right">({{ category1.items.all.count }})</span>{{ category1.name }}
+                                                    <span class="pull-right">({{ category1.c_items.all.count }})</span>{{ category1.name }}
                                                 </a>
                                             </li>
                                         {% endfor %}
@@ -66,29 +66,15 @@
             <div class="brands-name">
                 <ul class="nav nav-pills nav-stacked">
                     {% for manuf in manufacturers %}
-                        {% if manuf.items.all.count %}
+                        {% if manuf.m_items.all.count %}
                             <li>
-                                <a href="{{ manuf.get_absolute_url }}"><span class="pull-right">({{ manuf.items.all.count }})</span>{{ manuf.name }}</a>
+                                <a href="{{ manuf.get_absolute_url }}"><span class="pull-right">({{ manuf.m_items.all.count }})</span>{{ manuf.name }}</a>
                             </li>
                         {% endif %}
                     {% endfor %}
                 </ul>
             </div>
         </div><!--/brands_products-->
-
-        {% comment %}
-        <div class="price-range"><!--price-range-->
-            <h2>Price Range</h2>
-            <div class="well text-center">
-                 <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="600" data-slider-step="5" data-slider-value="[250,450]" id="sl2" ><br />
-                 <b class="pull-left">$ 0</b> <b class="pull-right">$ 600</b>
-            </div>
-        </div><!--/price-range-->
-
-           <div class="shipping text-center"><!--shipping-->
-               <img src="{{ STATIC_URL }}images/home/shipping.jpg" alt="" />
-           </div><!--/shipping-->
-        {% endcomment %}
     </div>
 </div>
 

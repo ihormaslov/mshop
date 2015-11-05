@@ -55,7 +55,7 @@ class ItemAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': ('category', 'name', 'price', 'manufacturer',
-                       'inStore', 'publicated', 'order', 'item_description', 'date',)}),
+                       'in_store', 'publicated', 'order', 'item_description', 'date',)}),
         ('SEO', {
             'classes': ('collapse', ),
             'fields': ('slug', 'keywords', 'description', )})
