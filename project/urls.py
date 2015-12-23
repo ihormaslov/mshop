@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 # from shop.sitemap import *
+from api.views import router
 
 
 admin.autodiscover()
@@ -23,6 +24,8 @@ urlpatterns = patterns('',
                        url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
                        url(r'^$', 'shop.views.index', name='index'),
                        url(r'^shop/', include('shop.urls', ), name='shop'),
+                       url(r'^api/', include(router.urls)),
+                       url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 )
 
 if settings.DEBUG:

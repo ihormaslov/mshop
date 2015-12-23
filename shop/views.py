@@ -13,7 +13,7 @@ from decorators import render_to
 from shop import cart
 
 
-@render_to('shop/index.html')
+@render_to('index.html')
 def index(request):
     items = Item.objects.filter(publicated=True).order_by('-date')[:6]
     sliders = HomeSlider.objects.all()
@@ -26,7 +26,7 @@ def index(request):
             'cart_item_count': cart.distinct_item_count(request), 'sliders': sliders}
 
 
-@render_to('shop/products.html')
+@render_to('products.html')
 def category_page(request, slug=None):
     category = get_object_or_404(Category, slug=slug)
     items = Item.objects.filter(publicated=True, category=category.pk).order_by('-date')
@@ -42,7 +42,7 @@ def category_page(request, slug=None):
             'cart_item_count': cart.distinct_item_count(request)}
 
 
-@render_to('shop/products.html')
+@render_to('products.html')
 def manufacturer_page(request, slug=None):
     manufacturer = get_object_or_404(Manufacturer, slug=slug)
     items = Item.objects.filter(publicated=True, manufacturer=manufacturer.pk).order_by('-date')
@@ -58,7 +58,7 @@ def manufacturer_page(request, slug=None):
             'cart_item_count': cart.distinct_item_count(request)}
 
 
-@render_to('shop/product-details.html')
+@render_to('product-details.html')
 def item(request, category_slug, self_slug):
     item = get_object_or_404(Item, slug=self_slug, category__slug=category_slug)
     items = Item.objects.filter(publicated=True, category__slug=category_slug).exclude(slug=self_slug)[:12]
@@ -83,7 +83,7 @@ def item(request, category_slug, self_slug):
             'categories': categories, 'manufacturers': manufacturers}
 
 
-@render_to('shop/cart.html')
+@render_to('cart.html')
 def show_cart(request):
     cart_items = cart.get_cart_items(request)
     cart_subtotal = cart.cart_subtotal(request)
@@ -103,7 +103,7 @@ def remove_from_cart(request, item_id):
     return redirect(request.META.get('HTTP_REFERER'))
 
 
-@render_to('shop/checkout.html')
+@render_to('checkout.html')
 def checkout(request):
     # TODO need to create email temaplates for managers and clients
     if cart.is_empty(request):
@@ -141,7 +141,7 @@ def checkout(request):
     return {'cart_items': cart_items, 'form': form, 'cart_item_count': cart.distinct_item_count(request)}
 
 
-@render_to('shop/search.html')
+@render_to('search.html')
 def show_search(request):
     words = request.GET.get('words')
     error = True if words is None else ''

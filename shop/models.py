@@ -15,6 +15,7 @@ class Division(models.Model):
     order = models.IntegerField(verbose_name=u'Порядок сортировки', blank=True, null=True, default=0)
     parent = models.ForeignKey('self', verbose_name=u'Родительсткая категория', related_name='children', blank=True, null=True)
     publicated = models.BooleanField(verbose_name=u'Опубликовано', default=True)
+    count = models.IntegerField(blank=True, null=True)
 
     date = models.DateTimeField(default=datetime.now, verbose_name=u'Дата добавления')
     modified = models.DateTimeField(auto_now=True)
