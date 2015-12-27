@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block content %}
+	<section id="cart_items">
+		<div class="container">
+			<div class="breadcrumbs">
+				<ol class="breadcrumb">
+				  <li><a href="/">Главная</a></li>
+				  <li class="active">Оформление заказа</li>
+				</ol>
+			</div><!--/breadcrums-->
+
+			<div class="register-req">
+				<p>Введите Ваше имя, телефон и выберите способ доставки.</p>
+			</div><!--/register-req-->
+
+			<div class="shopper-informations">
+				<div class="row">
+					<form method="post" action=".">
+                        {{ form.non_field_errors }}
+                        {% csrf_token %}
+                        <div class="col-sm-4">
+                            <div class="shopper-info">
+                                <p>Информация о доставке</p>
+                                    {{ form.first_name }}
+                                    {{ form.first_name.errors }}
+
+                                    {{ form.last_name }}
+                                    {{ form.last_name.errors }}
+
+                                    {{ form.phone }}
+                                    {{ form.phone.errors }}
+
+                                    {{ form.email }}
+                                    {{ form.email.errors }}
+
+                                    {{ form.ship_method }}
+                                    {{ form.ship_method.errors }}
+
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="order-message">
+                                <p>Комментарий к заказу</p>
+                                    {{ form.comment }}
+                                    {{ form.comment.errors }}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary pull-right">Заказать</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section> <!--/#cart_items-->
+{% endblock %}

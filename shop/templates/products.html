@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block description %}
+    {% if category.description %}
+        {{ category.description }}
+    {% endif %}
+{% endblock %}
+
+{% block keywords %}
+    {% if category.keywords %}
+        {{ category.keywords }}
+    {% endif %}
+{% endblock %}
+
+{% block author %}
+{% endblock %}
+
+{% block title %}
+    {{ category.name }}
+{% endblock %}
+
+
+{% block content %}
+    <section id="advertisement">
+        <div class="container">
+            <img src="{{ STATIC_URL }}images/shop/advertisement.jpg" alt="" />
+        </div>
+    </section>
+    {% include 'inc.sidebar.html' %}
+    <div class="col-sm-9 padding-right">
+        <div class="features_items"><!--features_items-->
+            <h2 class="title text-center">{{ category.name }}</h2>
+            {% for item in items %}
+            <div class="col-sm-4">
+                <div class="product-image-wrapper">
+                    <div class="single-products">
+                        <div class="productinfo text-center">
+                            <img src="{% thumbnail item.images.all.0.image 268x248 crop %}" alt="" />
+                            <h2>{{ item.price_currency }} грн</h2>
+                            <p>{{ item.name }}</p>
+                            <a href="{% url 'add_to_cart' item.slug %}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>В корзину</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% include "inc.pagination.html" %}
+        </div><!--features_items-->
+    </div>
+{% endblock %}

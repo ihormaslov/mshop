@@ -32,7 +32,6 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'easy_thumbnails',
     'ckeditor',
-    'rest_framework',
     # local apps
      'shop',
 )
