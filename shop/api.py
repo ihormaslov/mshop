@@ -7,7 +7,7 @@ from shop.models import Category
 
 
 class CategoryResource(DjangoResource):
-    # preparer = FieldsPreparer(fields={'id', 'name', }) #'parent', 'count', 'order', 'date'})
+    preparer = FieldsPreparer(fields={'id': 'id', 'name': 'name', }) #'parent', 'count', 'order', 'date'})
 
     def list(self):
         return Category.objects.all()
