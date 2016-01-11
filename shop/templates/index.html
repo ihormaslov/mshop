@@ -60,6 +60,19 @@
 {% block content %}
     <div class="col-sm-3">
         {% include 'inc.sidebar.html' %}
+        <!--
+        <div id="result"></div>
+        <script>
+            $.get( "/api/shop/categories/", function( data ) {
+                $("#result").html( data['objects'][0].name );
+                console.log('data:', data)
+                $.each(data, function(index, value){
+                    console.log('index', index)
+                    console.log('value', value)
+                })
+            });
+        </script> -->
+
         <div id="react-sidebar"></div>
         <script type="text/babel" src="{{ STATIC_URL }}/jsx/sidebar.js"></script>
     </div>

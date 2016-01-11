@@ -15,6 +15,4 @@ urlpatterns = [
     url(r'^checkout/$', views.checkout, name='checkout'),
 
     url(r'^search/$', views.show_search, name='show_search'),
-
-
 ]

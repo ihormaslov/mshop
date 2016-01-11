@@ -6,10 +6,10 @@ var CategoriesBox = React.createClass({
             cache: false,
             success: function(data) {
                 this.setState({data: data});
-                console.log('asdfasdfasdf')
+                console.log('Success!!')
             }.bind(this),
             error: function(xhr, status, err) {
-                console.log('123123123')
+                console.log('Error!!!')
                 console.error(this.props.url, status, err.toString());
             }.bind(this)
         });
@@ -42,15 +42,18 @@ var CategoriesBox = React.createClass({
 
 var CategoriesList = React.createClass({
     render: function(){
+        console.log(this.props.data)
         var categoryNodes = this.props.data.map(function(item){
             return(
                 <Category>
                     {item.name}
                 </Category>
             )
-        }),
+        });
         return(
-
+            <div className="category-list">
+                { categoryNodes }
+            </div>
         )
     }
 })
@@ -64,7 +67,7 @@ var Category = React.createClass({
 })
 
 ReactDOM.render(
-    <CategoriesList url="/api/categories/" />,
+    <CategoriesBox url="/api/shop/categories/" />,
     document.getElementById('react-sidebar')
 );
 
